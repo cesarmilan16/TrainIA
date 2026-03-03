@@ -76,3 +76,11 @@ export const generateTrainingController = async (req, res) => {
         });
     }
 };
+
+export const getTrainingByIdController = async (req, res) => {
+    const id = req.params.id
+
+    const result = db.prepare("SELECT * FROM trainings WHERE id = ?").get(id);
+
+    res.json(result);
+};
