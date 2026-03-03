@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+import "./db/init.js";
 import app from "./app.js";
 
 const PORT = 3000;
