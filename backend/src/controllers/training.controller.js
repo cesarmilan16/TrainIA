@@ -47,8 +47,9 @@ export const generateTrainingController = async (req, res) => {
         equipment,
         status,
         training_json,
-        created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        created_at,
+        retry_count
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
         id,
         validatedData.goal,
@@ -58,7 +59,8 @@ export const generateTrainingController = async (req, res) => {
         validatedData.equipment,
         "GENERATING",
         null,
-        new Date().toISOString()
+        new Date().toISOString(),
+        0
     );
 
     generateTraining(validatedData)
@@ -164,7 +166,7 @@ export const getTrainingController = (req, res) => {
             experienceLevel: row.experience_level,
             equipment: row.equipment,
             status: row.status,
-            createdAt: row.created_at
+            createdAt: row.created_at,
         }
     });
 
@@ -211,6 +213,14 @@ export const regenerateTrainingController = (req, res) => {
         });
     };
 
+    if (result.retry_count >= 2) {
+        return res.status(409).json({
+            error: "Has consumido todo los intentos"
+        });
+    };
+
+
+
     const inputData = {
         goal: result.goal,
         daysPerWeek: result.days_per_week,
@@ -221,7 +231,7 @@ export const regenerateTrainingController = (req, res) => {
 
     db.prepare(`
         UPDATE trainings
-        SET status = ?, training_json = ?
+        SET status = ?, training_json = ?, retry_count = retry_count + 1
         WHERE id = ?
         `).run(
         "GENERATING",

@@ -10,6 +10,7 @@ db.prepare(`
     equipment TEXT NOT NULL,
     status TEXT NOT NULL,
     training_json TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    retry_count INTEGER NOT NULL DEFAULT 0
   )
 `).run();
