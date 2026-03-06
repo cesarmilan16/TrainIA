@@ -6,28 +6,28 @@ export function validateSplitCoherence(trainingSplit, daysPerWeek) {
     if (!rules) {
         throw {
             field: "trainingSplit",
-            message: "Invalid training split"
+            message: "Division de entrenamiento no valida"
         };
     }
 
     if (daysPerWeek < rules.min) {
         throw {
             field: "daysPerWeek",
-            message: `${trainingSplit} requires at least ${rules.min} training days`
+            message: `${trainingSplit} requiere al menos ${rules.min} dias de entrenamiento`
         };
     }
 
     if (rules.max && daysPerWeek > rules.max) {
         throw {
             field: "daysPerWeek",
-            message: `${trainingSplit} allows at most ${rules.max} training days`
+            message: `${trainingSplit} permite como maximo ${rules.max} dias de entrenamiento`
         };
     }
 
     if (rules.onlyEven && daysPerWeek % 2 !== 0) {
         throw {
             field: "daysPerWeek",
-            message: `${trainingSplit} requires an even number of training days`
+            message: `${trainingSplit} requiere un numero par de dias de entrenamiento`
         };
     }
 }

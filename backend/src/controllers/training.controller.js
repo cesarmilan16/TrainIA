@@ -10,7 +10,7 @@ export const generateTrainingController = async (req, res) => {
 
     if (!result.success) {
         return res.status(400).json({
-            errors: result.error.errors.map(err => ({
+            errors: result.error.issues.map(err => ({
                 field: err.path[0],
                 message: err.message
             }))
@@ -103,7 +103,7 @@ export const getTrainingByIdController = (req, res) => {
 
     if (!result) {
         return res.status(404).json({
-            error: "Not found"
+            error: "Entrenamiento no encontrado"
         });
     }
 
@@ -154,7 +154,21 @@ export const getTrainingByIdController = (req, res) => {
         });
     }
 
-    const training = JSON.parse(training_json);
+    if (!training_json) {
+        return res.status(500).json({
+            error: "Entrenamiento generado no valido"
+        });
+    }
+
+    let training;
+    try {
+        training = JSON.parse(training_json);
+    } catch (error) {
+        console.error("Stored training JSON parse error:", error);
+        return res.status(500).json({
+            error: "Entrenamiento generado no valido"
+        });
+    }
 
     return res.status(200).json({
         id,
@@ -204,9 +218,6 @@ export const getTrainingController = (req, res) => {
         SELECT COUNT(*) as total FROM trainings
         `).get();
 
-    console.log(resultTotal);
-
-
     const total = resultTotal.total;
 
 
@@ -239,13 +250,13 @@ export const regenerateTrainingController = (req, res) => {
 
     if (result.status === "GENERATING") {
         return res.status(409).json({
-            error: "El entrenamiento se esta generando"
+            error: "El entrenamiento se está generando"
         });
     };
 
     if (result.retry_count >= 2) {
         return res.status(409).json({
-            error: "Has consumido todo los intentos"
+            error: "Has consumido todos los intentos"
         });
     };
 
@@ -315,7 +326,7 @@ export const deleteTrainingController = (req, res) => {
 
     if (result.status === "GENERATING") {
         return res.status(409).json({
-            error: "El entrenamiento se esta generando"
+            error: "El entrenamiento se está generando"
         });
     };
 

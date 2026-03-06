@@ -3,10 +3,10 @@ import { deleteTrainingController, generateTrainingController, getTrainingByIdCo
 
 const router = express.Router();
 
+router.get("/health", healthController);
 router.post("/generate", generateTrainingController);
 router.get("/:id", getTrainingByIdController);
 router.get("/", getTrainingController);
-router.get("/health", healthController);
 router.put("/:id", regenerateTrainingController);
 router.delete("/:id", deleteTrainingController);
 
