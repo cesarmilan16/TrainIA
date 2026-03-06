@@ -326,3 +326,9 @@ export const deleteTrainingController = (req, res) => {
 
     return res.status(204).send();
 };
+
+export const healthController = (req, res) => {
+    res.status(200).json({
+        status: "ok"
+    });
+};

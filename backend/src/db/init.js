@@ -14,3 +14,8 @@ db.prepare(`
     retry_count INTEGER NOT NULL DEFAULT 0
   )
 `).run();
+
+db.prepare(`
+  CREATE INDEX IF NOT EXISTS idx_trainings_created_at
+  ON trainings(created_at DESC)
+`).run();
