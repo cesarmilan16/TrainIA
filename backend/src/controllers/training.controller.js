@@ -95,49 +95,79 @@ export const generateTrainingController = async (req, res) => {
 };
 
 export const getTrainingByIdController = (req, res) => {
-    const idParams = req.params.id
+    const idParams = req.params.id;
 
-    const result = db.prepare("SELECT * FROM trainings WHERE id = ?").get(idParams);
+    const result = db
+        .prepare("SELECT * FROM trainings WHERE id = ?")
+        .get(idParams);
 
     if (!result) {
         return res.status(404).json({
             error: "Not found"
-        })
+        });
     }
 
-    const { id, goal, days_per_week, training_split, experience_level, equipment, status, created_at } = result;
+    const GENERATION_TIMEOUT = 2 * 60 * 1000;
 
-    const training = result.training_json
-        ? JSON.parse(result.training_json)
-        : null;
+    const {
+        id,
+        goal,
+        days_per_week,
+        training_split,
+        experience_level,
+        equipment,
+        status,
+        created_at,
+        training_json
+    } = result;
 
-    if (status !== "COMPLETED") {
+    let currentStatus = status;
+
+    // reparar estado si se ha quedado colgado
+    if (currentStatus === "GENERATING") {
+        const elapsed = Date.now() - new Date(created_at).getTime();
+
+        if (elapsed > GENERATION_TIMEOUT) {
+            db.prepare(`
+                UPDATE trainings
+                SET status = ?
+                WHERE id = ?
+            `).run("FAILED", idParams);
+
+            currentStatus = "FAILED";
+        }
+    }
+
+    // si no está completado no devolvemos el entrenamiento
+    if (currentStatus !== "COMPLETED") {
         return res.status(200).json({
-            id: id,
-            status: status,
+            id,
+            status: currentStatus,
             createdAt: created_at,
             input: {
-                goal: goal,
+                goal,
                 daysPerWeek: days_per_week,
                 trainingSplit: training_split,
                 experienceLevel: experience_level,
-                equipment: equipment
-            },
+                equipment
+            }
         });
-    };
+    }
+
+    const training = JSON.parse(training_json);
 
     return res.status(200).json({
-        id: id,
-        status: status,
+        id,
+        status: currentStatus,
         createdAt: created_at,
         input: {
-            goal: goal,
+            goal,
             daysPerWeek: days_per_week,
             trainingSplit: training_split,
             experienceLevel: experience_level,
-            equipment: equipment
+            equipment
         },
-        training: training
+        training
     });
 };
 
@@ -267,4 +297,32 @@ export const regenerateTrainingController = (req, res) => {
         id: idParams,
         status: "GENERATING"
     })
+};
+
+export const deleteTrainingController = (req, res) => {
+    const idParams = req.params.id;
+
+    const result = db.prepare(`
+        SELECT status FROM trainings
+        WHERE id = ?
+        `).get(idParams);
+
+    if (!result) {
+        return res.status(404).json({
+            error: "Entrenamiento no encontrado"
+        });
+    };
+
+    if (result.status === "GENERATING") {
+        return res.status(409).json({
+            error: "El entrenamiento se esta generando"
+        });
+    };
+
+    db.prepare(`
+        DELETE FROM trainings
+        WHERE id = ?
+        `).run(idParams)
+
+    return res.status(204).send();
 };
