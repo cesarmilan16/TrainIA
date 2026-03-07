@@ -4,6 +4,5 @@ import { HealthCheck } from './features/trainings/components/health-check/health
 
 export const routes: Routes = [
   { path: '', component: TrainingForm },
-  { path: 'generate', component: TrainingForm },
-  { path: 'health', component: HealthCheck },
+  { path: 'health', component: HealthCheck }
 ];
