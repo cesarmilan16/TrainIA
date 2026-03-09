@@ -5,7 +5,6 @@ import { TrainingApiService } from '../../../../core/trainings/training-api.serv
   selector: 'app-health-check',
   imports: [],
   templateUrl: './health-check.html',
-  styleUrl: './health-check.css',
 })
 export class HealthCheck {
   private readonly trainingApi = inject(TrainingApiService);

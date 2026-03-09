@@ -1,1 +1,105 @@
-<p>training-form works!</p>
+<div class="min-h-screen bg-slate-50 py-10">
+  <div class="mx-auto max-w-2xl px-4 space-y-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h1 class="text-2xl font-semibold text-slate-900">Generar entrenamiento</h1>
+      <p class="mt-1 text-sm text-slate-600">
+        Completa el formulario y te devolvemos un plan personalizado.
+      </p>
+
+      <form class="mt-6 flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700" for="goal">Objetivo</label>
+          <textarea
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            id="goal"
+            formControlName="goal"
+            rows="4"
+          ></textarea>
+          @if (form.controls.goal.touched && form.controls.goal.invalid) {
+            <p class="mt-1 text-sm text-rose-600">Revisa el objetivo (10-200 caracteres).</p>
+          }
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700" for="daysPerWeek">Días por semana</label>
+          <input
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            id="daysPerWeek"
+            type="number"
+            formControlName="daysPerWeek"
+          />
+          @if (form.controls.daysPerWeek.touched && form.controls.daysPerWeek.invalid) {
+            <p class="mt-1 text-sm text-rose-600">Debe estar entre 2 y 6.</p>
+          }
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700" for="trainingSplit">Split</label>
+          <select
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            id="trainingSplit"
+            formControlName="trainingSplit"
+          >
+            @for (split of trainingSplits; track split) {
+              <option [value]="split">{{ split }}</option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700" for="experienceLevel">Nivel</label>
+          <select
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            id="experienceLevel"
+            formControlName="experienceLevel"
+          >
+            @for (level of experienceLevels; track level) {
+              <option [value]="level">{{ level }}</option>
+            }
+          </select>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700" for="equipment">Equipamiento</label>
+          <select
+            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            id="equipment"
+            formControlName="equipment"
+          >
+            @for (item of equipments; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </div>
+
+        <button
+          class="mt-2 inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+          type="submit"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          @if (isSubmitting()) { Enviando... } @else { Generar }
+        </button>
+      </form>
+    </div>
+
+    @if (apiError()) {
+      <div class="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+        {{ apiError() }}
+      </div>
+    }
+
+    @if (generatedId()) {
+      <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+        <p><span class="font-semibold">ID:</span> {{ generatedId() }}</p>
+        <p><span class="font-semibold">Estado:</span> {{ generatedStatus() }}</p>
+      </div>
+    }
+
+    @if (generatedTraining()) {
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 class="text-base font-semibold text-slate-900">Entrenamiento generado</h2>
+        <pre class="mt-3 max-h-96 overflow-auto rounded-xl bg-slate-900 p-4 text-xs text-slate-100">{{ generatedTraining() | json }}</pre>
+      </div>
+    }
+  </div>
+</div>
