@@ -4,6 +4,10 @@ dotenv.config();
 import "./db/init.js";
 import app from "./app.js";
 
+if (process.env.NODE_ENV !== 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
+
 function validateEnv() {
   const errors = [];
 
