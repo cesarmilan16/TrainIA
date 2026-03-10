@@ -50,4 +50,44 @@ describe("Trainings API", () => {
         const res = await request(app).get(`/api/trainings/${createdId}`);
         expect(res.status).toBe(200);
     });
-})
+
+    it("GET /api/trainings -> 200 con entrenamientos paginados", async () => {
+        const res = await request(app).get("/api/trainings?page=1&limit=10");
+
+        expect(res.status).toBe(200);
+        expect(Array.isArray(res.body.data)).toBe(true);
+        expect(res.body.pagination).toEqual(
+            expect.objectContaining({
+                page: 1,
+                limit: 10,
+            })
+        );
+        expect(typeof res.body.pagination.total).toBe("number");
+        expect(typeof res.body.pagination.totalPages).toBe("number");
+        expect(res.body.data.length).toBeGreaterThan(0);
+        expect(res.body.data[0]).toEqual(
+            expect.objectContaining({
+                id: expect.any(String),
+                goal: expect.any(String),
+                daysPerWeek: expect.any(Number),
+                trainingSplit: expect.any(String),
+                experienceLevel: expect.any(String),
+                equipment: expect.any(String),
+                status: expect.any(String),
+                createdAt: expect.any(String),
+            })
+        );
+    });
+
+    it("GET /api/trainings -> ajusta parametros de paginacion invalidos", async () => {
+        const res = await request(app).get("/api/trainings?page=-3&limit=999");
+
+        expect(res.status).toBe(200);
+        expect(res.body.pagination).toEqual(
+            expect.objectContaining({
+                page: 1,
+                limit: 50,
+            })
+        );
+    });
+});
