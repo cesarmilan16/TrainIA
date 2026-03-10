@@ -43,6 +43,24 @@ export interface TrainingListResponse {
     pagination: Pagination;
 }
 
+export interface GeneratedTrainingExercise {
+  name: string;
+  sets: number;
+  reps: string;
+}
+
+export interface GeneratedTrainingDay {
+  dayNumber: number;
+  workout: string;
+  exercises: GeneratedTrainingExercise[];
+}
+
+export interface GeneratedTraining {
+  title: string;
+  description: string;
+  days: GeneratedTrainingDay[];
+}
+
 export interface TrainingInput {
     goal: string;
     daysPerWeek: number;
@@ -56,7 +74,7 @@ export interface TrainingDetailResponse {
     status: TrainingStatus;
     createdAt: string;
     input: TrainingInput;
-    training?: unknown;
+    training?: GeneratedTraining;
 }
 
 export interface ApiValidationErrorItem {

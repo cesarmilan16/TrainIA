@@ -1,13 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { TrainingSplit, ExperienceLevel, Equipment } from '../../../../core/trainings/training-api.models';
+import { TrainingSplit, ExperienceLevel, Equipment, GeneratedTraining } from '../../../../core/trainings/training-api.models';
 import { TrainingApiService } from '../../../../core/trainings/training-api.service';
 import { finalize, switchMap, takeWhile, timer } from 'rxjs';
 
 @Component({
   selector: 'app-training-form',
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './training-form.html',
 })
 export class TrainingForm {
@@ -18,11 +17,27 @@ export class TrainingForm {
   readonly apiError = signal('');
   readonly generatedId = signal('');
   readonly generatedStatus = signal('');
-  readonly generatedTraining = signal<unknown | null>(null);
+  readonly generatedTraining = signal<GeneratedTraining | null>(null);
 
   readonly trainingSplits: TrainingSplit[] = ['fullbody', 'upper_lower', 'push_pull_legs', 'weider'];
   readonly experienceLevels: ExperienceLevel[] = ['beginner', 'intermediate', 'advanced'];
   readonly equipments: Equipment[] = ['gym', 'home_dumbbells', 'calisthenics'];
+  readonly trainingSplitLabels: Record<TrainingSplit, string> = {
+    fullbody: 'Full body',
+    upper_lower: 'Torso / pierna',
+    push_pull_legs: 'Push / pull / legs',
+    weider: 'Weider',
+  };
+  readonly experienceLevelLabels: Record<ExperienceLevel, string> = {
+    beginner: 'Principiante',
+    intermediate: 'Intermedio',
+    advanced: 'Avanzado',
+  };
+  readonly equipmentLabels: Record<Equipment, string> = {
+    gym: 'Gimnasio completo',
+    home_dumbbells: 'Mancuernas en casa',
+    calisthenics: 'Calistenia',
+  };
 
 
   readonly form = this.fb.nonNullable.group({
@@ -87,5 +102,17 @@ export class TrainingForm {
           this.apiError.set(backendMessage ?? 'Error al generar entrenamiento');
         },
       });
+  }
+
+  getTrainingSplitLabel(split: TrainingSplit): string {
+    return this.trainingSplitLabels[split];
+  }
+
+  getExperienceLevelLabel(level: ExperienceLevel): string {
+    return this.experienceLevelLabels[level];
+  }
+
+  getEquipmentLabel(equipment: Equipment): string {
+    return this.equipmentLabels[equipment];
   }
 }
