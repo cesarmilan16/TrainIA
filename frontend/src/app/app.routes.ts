@@ -5,8 +5,9 @@ import { TrainingList } from './features/trainings/components/training-list/trai
 import { TrainingDetail } from './features/trainings/components/training-detail/training-detail';
 
 export const routes: Routes = [
-  { path: 'form', component: TrainingForm },
-  { path: 'trainings', component: TrainingList},
-  { path: 'trainings/:id', component: TrainingDetail},
+  { path: '', redirectTo: 'trainings', pathMatch: 'full' },
+  { path: 'trainings', component: TrainingList },
+  { path: 'trainings/new', component: TrainingForm },
+  { path: 'trainings/:id', component: TrainingDetail },
   { path: 'health', component: HealthCheck }
 ];

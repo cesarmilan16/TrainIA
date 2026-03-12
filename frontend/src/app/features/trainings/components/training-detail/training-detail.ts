@@ -1,7 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { TrainingApiService } from '../../../../core/trainings/training-api.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TrainingDetailResponse } from '../../../../core/trainings/training-api.models';
+import {
+  Equipment,
+  ExperienceLevel,
+  TrainingDetailResponse,
+  TrainingSplit,
+  TrainingStatus,
+} from '../../../../core/trainings/training-api.models';
 
 @Component({
   selector: 'app-training-detail',
@@ -21,7 +27,11 @@ export class TrainingDetail {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadTrainingById(id);
+      return;
     }
+
+    this.error.set('No se encontró el entrenamiento');
+    this.isLoading.set(false);
   }
 
   loadTrainingById(id: string): void {
@@ -35,5 +45,63 @@ export class TrainingDetail {
         this.isLoading.set(false);
       }
     });
+  }
+
+  getTrainingSplitLabel(split: TrainingSplit): string {
+    const labels: Record<TrainingSplit, string> = {
+      fullbody: 'Full body',
+      upper_lower: 'Torso / pierna',
+      push_pull_legs: 'Push / pull / legs',
+      weider: 'Weider',
+    };
+
+    return labels[split];
+  }
+
+  getExperienceLevelLabel(level: ExperienceLevel): string {
+    const labels: Record<ExperienceLevel, string> = {
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado',
+    };
+
+    return labels[level];
+  }
+
+  getEquipmentLabel(equipment: Equipment): string {
+    const labels: Record<Equipment, string> = {
+      gym: 'Gimnasio completo',
+      home_dumbbells: 'Mancuernas en casa',
+      calisthenics: 'Calistenia',
+    };
+
+    return labels[equipment];
+  }
+
+  getStatusLabel(status: TrainingStatus): string {
+    const labels: Record<TrainingStatus, string> = {
+      GENERATING: 'Generando',
+      COMPLETED: 'Completado',
+      FAILED: 'Fallido',
+    };
+
+    return labels[status];
+  }
+
+  getStatusClasses(status: TrainingStatus): string {
+    const classes: Record<TrainingStatus, string> = {
+      GENERATING: 'border-amber-800 bg-amber-950 text-amber-300',
+      COMPLETED: 'border-emerald-800 bg-emerald-950 text-emerald-300',
+      FAILED: 'border-rose-800 bg-rose-950 text-rose-300',
+    };
+
+    return classes[status];
+  }
+
+  formatDate(value: string): string {
+    return new Intl.DateTimeFormat('es-ES', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(value));
   }
 }
