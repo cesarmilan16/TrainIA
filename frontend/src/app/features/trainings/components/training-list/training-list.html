@@ -2,24 +2,24 @@
     <div class="mx-auto max-w-5xl px-4">
 
         <!-- Header -->
-        <div class="mb-6 rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
-            <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                <div>
+        <div class="mb-6 rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-sm sm:p-6">
+            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div class="min-w-0">
                     <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">TrainIA</p>
-                    <h1 class="mt-2 text-3xl font-semibold text-zinc-100">Tus entrenamientos</h1>
-                    <p class="mt-2 max-w-2xl text-sm text-zinc-400">
+                    <h1 class="mt-2 text-2xl font-semibold text-zinc-100 sm:text-3xl">Tus entrenamientos</h1>
+                    <p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
                         Revisa los planes que has generado y consulta rápidamente su estado, split, nivel y fecha de
                         creación.
                     </p>
                 </div>
 
-                <div class="flex flex-col gap-3">
+                <div class="flex w-full flex-col gap-3 md:w-auto md:min-w-52">
                     <div class="rounded-2xl border border-zinc-700 bg-zinc-800 px-5 py-3 text-center">
                         <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Total</p>
                         <p class="mt-1 text-3xl font-bold text-zinc-100">{{ pagination()?.total }}</p>
                     </div>
                     <a routerLink="/form"
-                        class="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-300 px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white">
+                        class="inline-flex w-full items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-300 px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white md:w-auto">
                         + Nuevo entrenamiento
                     </a>
                 </div>
@@ -64,25 +64,28 @@
             @for (training of trainings(); track training.id) {
 
             <article
-                class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30">
+                class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30 sm:p-5">
 
-                <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1 min-w-0">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div class="min-w-0 flex-1">
                         <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Entrenamiento</p>
-                        <h2 class="mt-1 truncate text-lg font-semibold text-zinc-100">{{ training.goal }}</h2>
+                        <h2 class="mt-1 text-lg font-semibold leading-6 text-zinc-100 sm:truncate">{{ training.goal }}</h2>
                     </div>
-                    <button
-                        class="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm font-medium text-rose-400 hover:border-rose-800 hover:bg-rose-950 transition-colors cursor-pointer"
-                        (click)="openDeleteModal(training.id)">Eliminar
-                    </button>
 
-                    <span class="shrink-0 inline-flex rounded-full border px-3 py-1 text-xs font-semibold"
-                        [class]="getStatusClasses(training.status)">
-                        {{ getStatusLabel(training.status) }}
-                    </span>
+                    <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+                        <button
+                            class="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm font-medium text-rose-400 hover:border-rose-800 hover:bg-rose-950 transition-colors cursor-pointer"
+                            (click)="openDeleteModal(training.id)">Eliminar
+                        </button>
+
+                        <span class="inline-flex rounded-full border px-3 py-1 text-xs font-semibold"
+                            [class]="getStatusClasses(training.status)">
+                            {{ getStatusLabel(training.status) }}
+                        </span>
+                    </div>
                 </div>
 
-                <div class="mt-4 grid grid-cols-2 gap-2">
+                <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div class="rounded-xl bg-zinc-800 p-3">
                         <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Split</p>
                         <p class="mt-1 text-sm font-medium text-zinc-200">{{
@@ -107,12 +110,12 @@
                     </div>
                 </div>
 
-                <div class="mt-4 flex items-center justify-between border-t border-zinc-800 pt-4">
-                    <div>
+                <div class="mt-4 flex flex-col gap-3 border-t border-zinc-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="min-w-0">
                         <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Creado</p>
                         <p class="mt-1 text-sm text-zinc-300">{{ formatDate(training.createdAt) }}</p>
                     </div>
-                    <p class="max-w-40 truncate text-xs text-zinc-600 font-mono">{{ training.id }}</p>
+                    <p class="max-w-full truncate text-xs text-zinc-600 font-mono sm:max-w-40">{{ training.id }}</p>
                 </div>
             </article>
             }
@@ -124,7 +127,7 @@
                 &lt;
             </button>
             <p
-                class="inline-flex min-w-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-100">
+                class="inline-flex min-w-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-semibold text-zinc-100 sm:px-4">
                 {{ currentPage() }}
             </p>
             <button [disabled]="currentPage() === pagination()?.totalPages" (click)="loadTrainings(currentPage() + 1)"
@@ -137,25 +140,25 @@
 
 @if (trainingToDelete()) {
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-    <div class="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl shadow-black/40">
+    <div class="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-2xl shadow-black/40 sm:p-6">
         <p class="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">Confirmación</p>
         <h2 class="mt-2 text-xl font-semibold text-zinc-100">Eliminar entrenamiento</h2>
         <p class="mt-3 text-sm leading-6 text-zinc-400">
             Esta acción no se puede deshacer. El entrenamiento seleccionado se eliminará definitivamente.
         </p>
 
-        <div class="mt-6 flex items-center justify-end gap-3">
+        <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
             <button
                 type="button"
                 (click)="closeDeleteModal()"
-                class="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700 cursor-pointer"
+                class="inline-flex w-full items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700 cursor-pointer sm:w-auto"
             >
                 Cancelar
             </button>
             <button
                 type="button"
                 (click)="confirmDelete()"
-                class="inline-flex items-center justify-center rounded-2xl border border-rose-800 bg-rose-950 px-4 py-2.5 text-sm font-medium text-rose-300 transition-colors hover:bg-rose-900 cursor-pointer"
+                class="inline-flex w-full items-center justify-center rounded-2xl border border-rose-800 bg-rose-950 px-4 py-2.5 text-sm font-medium text-rose-300 transition-colors hover:bg-rose-900 cursor-pointer sm:w-auto"
             >
                 Eliminar
             </button>
