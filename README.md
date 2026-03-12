@@ -2,8 +2,7 @@
 
 Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos desde un historial, ver su detalle y gestionarlos desde una interfaz moderna.
 
-<!-- Inserta aquí una captura principal del listado o de la vista más representativa -->
-<!-- Ejemplo: ![Vista principal de TrainIA](./docs/screenshots/training-list.png) -->
+![Vista principal de TrainIA](./docs/screenshots/training-list.png)
 
 ## Demo funcional
 - Crear un entrenamiento a partir de objetivo, frecuencia, split, nivel y equipamiento.
@@ -13,8 +12,7 @@ Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos
 - Regeneración de entrenamientos desde el detalle.
 - Eliminación desde la lista con confirmación previa.
 
-<!-- Inserta aquí un GIF corto del flujo crear -> generando -> detalle completado -->
-<!-- Ejemplo: ![Flujo de generación](./docs/screenshots/training-flow.gif) -->
+![Flujo de generación de entrenamiento](./docs/screenshots/training-flow.gif)
 
 ## Stack
 - Frontend: Angular 21, Signals, Angular Router, Tailwind CSS 4
@@ -42,7 +40,7 @@ Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos
 - `/trainings/new` formulario de creación
 - `/trainings/:id` detalle del entrenamiento
 
-<!-- Si quieres más apoyo visual, aquí encaja una imagen compuesta con listado, formulario y detalle -->
+![Pantallas principales: listado, creación y detalle](./docs/screenshots/trainia-overview.png)
 
 ## Endpoints principales
 - `POST /api/trainings/generate`
@@ -79,7 +77,7 @@ npm install
 npm start
 ```
 
-<!-- Aquí puedes añadir una captura de la aplicación ejecutándose en local -->
+![Aplicación ejecutándose en local](./docs/screenshots/trainia-local.png)
 
 La app quedará disponible en:
 - Frontend: `http://localhost:4200`
@@ -125,7 +123,7 @@ Esto crea demos en estado:
 - `FAILED`
 - `COMPLETED`
 
-<!-- Inserta aquí una captura del listado mostrando varios estados a la vez -->
+![Listado con estados GENERATING, COMPLETED y FAILED](./docs/screenshots/training-statuses.png)
 
 La app permite hasta `10` regeneraciones por entrenamiento.
 
