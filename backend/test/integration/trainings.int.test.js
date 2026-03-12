@@ -3,6 +3,7 @@ import request from "supertest";
 
 import "../../src/db/init.js";
 import app from "../../src/app.js";
+import db from "../../src/db/database.js";
 
 describe("Trainings API", () => {
     let createdId;
@@ -51,6 +52,15 @@ describe("Trainings API", () => {
         expect(res.status).toBe(200);
     });
 
+    it("GET /api/trainings/:id -> 404 si el entrenamiento no existe", async () => {
+        const res = await request(app).get("/api/trainings/no-existe");
+
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual({
+            error: "Entrenamiento no encontrado"
+        });
+    });
+
     it("GET /api/trainings -> 200 con entrenamientos paginados", async () => {
         const res = await request(app).get("/api/trainings?page=1&limit=10");
 
@@ -89,5 +99,89 @@ describe("Trainings API", () => {
                 limit: 50,
             })
         );
+    });
+
+    it("DELETE /api/trainings/:id -> 204 si borra correctamente", async () => {
+        const idToDelete = "test-delete-completed-001";
+
+        db.prepare(`
+            INSERT OR REPLACE INTO trainings (
+                id,
+                goal,
+                days_per_week,
+                training_split,
+                experience_level,
+                equipment,
+                status,
+                training_json,
+                created_at,
+                retry_count
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(
+            idToDelete,
+            "Entrenamiento de prueba para borrado",
+            3,
+            "fullbody",
+            "beginner",
+            "gym",
+            "COMPLETED",
+            JSON.stringify({
+                title: "Demo",
+                description: "Demo",
+                days: [
+                    {
+                        dayNumber: 1,
+                        workout: "Full body",
+                        exercises: [{ name: "Sentadilla", sets: 3, reps: "8-10" }]
+                    }
+                ]
+            }),
+            new Date().toISOString(),
+            0
+        );
+
+        const res = await request(app).delete(`/api/trainings/${idToDelete}`);
+
+        expect(res.status).toBe(204);
+
+        const deletedRow = db.prepare("SELECT id FROM trainings WHERE id = ?").get(idToDelete);
+        expect(deletedRow).toBeUndefined();
+    });
+
+    it("DELETE /api/trainings/:id -> 409 si el entrenamiento esta generandose", async () => {
+        const idGenerating = "test-delete-generating-001";
+
+        db.prepare(`
+            INSERT OR REPLACE INTO trainings (
+                id,
+                goal,
+                days_per_week,
+                training_split,
+                experience_level,
+                equipment,
+                status,
+                training_json,
+                created_at,
+                retry_count
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(
+            idGenerating,
+            "Entrenamiento en generacion para conflicto",
+            4,
+            "upper_lower",
+            "intermediate",
+            "gym",
+            "GENERATING",
+            null,
+            new Date().toISOString(),
+            0
+        );
+
+        const res = await request(app).delete(`/api/trainings/${idGenerating}`);
+
+        expect(res.status).toBe(409);
+        expect(res.body).toEqual({
+            error: "El entrenamiento se está generando"
+        });
     });
 });

@@ -85,7 +85,40 @@ Actualmente hay cobertura básica de integración para:
 - health check
 - generación válida e inválida
 - consulta por id
+- 404 por id inexistente
 - listado paginado
+- borrado exitoso
+- conflicto al borrar si el entrenamiento está en `GENERATING`
+
+### Frontend
+```bash
+cd frontend
+npm test -- --watch=false
+```
+
+Actualmente hay pruebas mínimas para:
+- render del listado con datos del servicio
+- render del detalle tras cargar por id
+
+## Datos demo
+Para insertar entrenamientos de ejemplo en distintos estados:
+
+```bash
+cd backend
+npm run seed:demo
+```
+
+Esto crea demos en estado:
+- `GENERATING`
+- `FAILED`
+- `COMPLETED`
+
+Para eliminarlos:
+
+```bash
+cd backend
+npm run seed:clear
+```
 
 ## Qué demuestra este proyecto
 - Diseño y consumo de una API REST real
@@ -98,7 +131,5 @@ Actualmente hay cobertura básica de integración para:
 
 ## Mejoras previstas
 - Regenerar entrenamiento desde la interfaz
-- Más cobertura de tests en frontend
 - Mejor tratamiento de errores y estados vacíos
-- Refinar la vista de detalle del entrenamiento
 - Despliegue y documentación visual con capturas

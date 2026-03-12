@@ -1,5 +1,7 @@
 import db from "./database.js";
 
+const now = new Date().toISOString();
+
 const demoTrainings = [
   {
     id: "demo-generating-001",
@@ -10,7 +12,7 @@ const demoTrainings = [
     equipment: "gym",
     status: "GENERATING",
     trainingJson: null,
-    createdAt: "2026-03-12T10:00:00.000Z",
+    createdAt: now,
     retryCount: 0,
   },
   {
