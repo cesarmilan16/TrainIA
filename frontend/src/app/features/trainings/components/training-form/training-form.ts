@@ -3,10 +3,11 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TrainingSplit, ExperienceLevel, Equipment, GeneratedTraining } from '../../../../core/trainings/training-api.models';
 import { TrainingApiService } from '../../../../core/trainings/training-api.service';
 import { finalize, switchMap, takeWhile, timer } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-training-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './training-form.html',
 })
 export class TrainingForm {
