@@ -102,6 +102,3 @@ Actualmente hay cobertura básica de integración para:
 - Mejor tratamiento de errores y estados vacíos
 - Refinar la vista de detalle del entrenamiento
 - Despliegue y documentación visual con capturas
-
-## Autor
-Proyecto desarrollado por Sesafresa como práctica real de producto full-stack orientado a portfolio.
