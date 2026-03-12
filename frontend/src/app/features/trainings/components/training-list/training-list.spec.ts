@@ -48,4 +48,38 @@ describe('TrainingList', () => {
     expect(compiled.textContent).toContain('Push / pull / legs');
     expect(compiled.textContent).toContain('Completado');
   });
+
+  it('should disable pagination when there are no trainings', async () => {
+    const trainingApiMock = {
+      getTrainings: () =>
+        of({
+          data: [],
+          pagination: {
+            page: 1,
+            limit: 6,
+            total: 0,
+            totalPages: 0,
+          },
+        }),
+      deleteTraining: () => of(void 0),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [TrainingList],
+      providers: [
+        provideRouter([]),
+        { provide: TrainingApiService, useValue: trainingApiMock },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(TrainingList);
+    fixture.detectChanges();
+
+    const buttons = fixture.nativeElement.querySelectorAll('button');
+    const previousButton = buttons[0] as HTMLButtonElement;
+    const nextButton = buttons[1] as HTMLButtonElement;
+
+    expect(previousButton.disabled).toBe(true);
+    expect(nextButton.disabled).toBe(true);
+  });
 });

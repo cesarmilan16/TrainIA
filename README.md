@@ -2,20 +2,8 @@
 
 Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos desde un historial, ver su detalle y gestionarlos desde una interfaz moderna.
 
-## Capturas
-Añade aquí tus imágenes o GIFs cuando quieras dejarlo listo para portfolio.
-
-```md
-![Listado de entrenamientos](./docs/screenshots/training-list.png)
-![Detalle de entrenamiento](./docs/screenshots/training-detail.png)
-![Formulario de creación](./docs/screenshots/training-form.png)
-```
-
-Huecos recomendados:
-- `[CAPTURA_LISTADO]` historial principal con cards y paginación
-- `[CAPTURA_DETALLE]` detalle completo con días y ejercicios
-- `[CAPTURA_FORMULARIO]` formulario de creación
-- `[GIF_GENERACION]` flujo crear -> generando -> detalle completado
+<!-- Inserta aquí una captura principal del listado o de la vista más representativa -->
+<!-- Ejemplo: ![Vista principal de TrainIA](./docs/screenshots/training-list.png) -->
 
 ## Demo funcional
 - Crear un entrenamiento a partir de objetivo, frecuencia, split, nivel y equipamiento.
@@ -24,6 +12,9 @@ Huecos recomendados:
 - Vista de detalle por entrenamiento.
 - Regeneración de entrenamientos desde el detalle.
 - Eliminación desde la lista con confirmación previa.
+
+<!-- Inserta aquí un GIF corto del flujo crear -> generando -> detalle completado -->
+<!-- Ejemplo: ![Flujo de generación](./docs/screenshots/training-flow.gif) -->
 
 ## Stack
 - Frontend: Angular 21, Signals, Angular Router, Tailwind CSS 4
@@ -50,6 +41,8 @@ Huecos recomendados:
 - `/trainings` listado principal
 - `/trainings/new` formulario de creación
 - `/trainings/:id` detalle del entrenamiento
+
+<!-- Si quieres más apoyo visual, aquí encaja una imagen compuesta con listado, formulario y detalle -->
 
 ## Endpoints principales
 - `POST /api/trainings/generate`
@@ -85,6 +78,8 @@ cd frontend
 npm install
 npm start
 ```
+
+<!-- Aquí puedes añadir una captura de la aplicación ejecutándose en local -->
 
 La app quedará disponible en:
 - Frontend: `http://localhost:4200`
@@ -130,6 +125,8 @@ Esto crea demos en estado:
 - `FAILED`
 - `COMPLETED`
 
+<!-- Inserta aquí una captura del listado mostrando varios estados a la vez -->
+
 La app permite hasta `10` regeneraciones por entrenamiento.
 
 Para eliminarlos:
@@ -151,5 +148,4 @@ npm run seed:clear
 
 ## Mejoras previstas
 - Despliegue online
-- Documentación visual final con capturas o GIF
 - Filtros y búsqueda en el listado

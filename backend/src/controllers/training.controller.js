@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import db from "../db/database.js";
 
 const MAX_REGENERATIONS = 10;
+const MAX_TRAININGS = 20;
 
 export const generateTrainingController = async (req, res) => {
 
@@ -17,6 +18,16 @@ export const generateTrainingController = async (req, res) => {
                 message: err.message
             }))
         });
+    }
+
+    const totalTrainings = db
+        .prepare("SELECT COUNT(*) as count FROM trainings")
+        .get();
+    
+    if (totalTrainings.count >= MAX_TRAININGS) {
+        return res.status(409).json({
+            error: `Has alcanzado el maximo de ${MAX_TRAININGS} entrenamientos`
+        })
     }
 
     const validatedData = result.data;

@@ -10,6 +10,7 @@ import { ExperienceLevel, TrainingListItem, TrainingSplit, Equipment, TrainingSt
   styles: ``,
 })
 export class TrainingList {
+  private readonly pageSize = 6;
   private readonly trainingApi = inject(TrainingApiService);
 
   readonly trainings = signal<TrainingListItem[]>([]);
@@ -25,7 +26,11 @@ export class TrainingList {
     this.loadTrainings();
   }
 
-  loadTrainings(page: number = this.currentPage(), limit: number = 6): void {
+  loadTrainings(page: number = this.currentPage(), limit: number = this.pageSize): void {
+    if (!this.canLoadPage(page)) {
+      return;
+    }
+
     this.isLoading.set(true);
     this.error.set('');
 
@@ -41,6 +46,20 @@ export class TrainingList {
         this.isLoading.set(false);
       }
     });
+  }
+
+  canGoToPreviousPage(): boolean {
+    return this.currentPage() > 1;
+  }
+
+  canGoToNextPage(): boolean {
+    const pagination = this.pagination();
+
+    if (!pagination || pagination.totalPages < 1) {
+      return false;
+    }
+
+    return this.currentPage() < pagination.totalPages;
   }
 
   deleteTraining(id: string): void {
@@ -130,5 +149,19 @@ export class TrainingList {
       dateStyle: 'medium',
       timeStyle: 'short',
     }).format(new Date(value));
+  }
+
+  private canLoadPage(page: number): boolean {
+    if (page < 1) {
+      return false;
+    }
+
+    const pagination = this.pagination();
+
+    if (!pagination) {
+      return true;
+    }
+
+    return pagination.totalPages > 0 && page <= pagination.totalPages;
   }
 }
