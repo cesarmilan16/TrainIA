@@ -1,40 +1,47 @@
 <div class="min-h-screen bg-zinc-950 py-10">
-  <div class="mx-auto max-w-3xl px-4">
-    @if (isLoading()) {
-      <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-10 text-center shadow-sm">
-        <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-zinc-100"></div>
-        <p class="mt-4 text-sm text-zinc-400">Cargando entrenamiento...</p>
-      </div>
-    }
-
-    @if (error()) {
-      <div class="rounded-2xl border border-rose-800 bg-rose-950 p-4 text-sm text-rose-400 shadow-sm">
-        {{ error() }}
-      </div>
-    }
-
-    @if (!isLoading() && training()) {
-      <div class="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
-        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">Detalle</p>
-        <h1 class="mt-2 text-2xl font-semibold text-zinc-100">Entrenamiento</h1>
-
-        <div class="mt-6 space-y-3">
-          <div class="rounded-2xl bg-zinc-800 p-4">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">ID</p>
-            <p class="mt-1 text-sm text-zinc-200">{{ training()?.id }}</p>
-          </div>
-
-          <div class="rounded-2xl bg-zinc-800 p-4">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Estado</p>
-            <p class="mt-1 text-sm text-zinc-200">{{ training()?.status }}</p>
-          </div>
-
-          <div class="rounded-2xl bg-zinc-800 p-4">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Objetivo</p>
-            <p class="mt-1 text-sm text-zinc-200">{{ training()?.input?.goal }}</p>
-          </div>
+    <div class="mb-5 ml-5 flex justify-start">
+        <a routerLink="/trainings"
+            class="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm font-semibold text-zinc-100 transition-colors hover:border-zinc-600 hover:bg-zinc-700">
+            <span aria-hidden="true">&larr;</span>
+            <span>Volver a entrenamientos</span>
+        </a>
+    </div>
+    <div class="mx-auto max-w-3xl px-4">
+        @if (isLoading()) {
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-10 text-center shadow-sm">
+            <div class="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-zinc-100"></div>
+            <p class="mt-4 text-sm text-zinc-400">Cargando entrenamiento...</p>
         </div>
-      </div>
-    }
-  </div>
+        }
+
+        @if (error()) {
+        <div class="rounded-2xl border border-rose-800 bg-rose-950 p-4 text-sm text-rose-400 shadow-sm">
+            {{ error() }}
+        </div>
+        }
+
+        @if (!isLoading() && training()) {
+        <div class="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">Detalle</p>
+            <h1 class="mt-2 text-2xl font-semibold text-zinc-100">Entrenamiento</h1>
+
+            <div class="mt-6 space-y-3">
+                <div class="rounded-2xl bg-zinc-800 p-4">
+                    <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">ID</p>
+                    <p class="mt-1 text-sm text-zinc-200">{{ training()?.id }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-zinc-800 p-4">
+                    <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Estado</p>
+                    <p class="mt-1 text-sm text-zinc-200">{{ training()?.status }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-zinc-800 p-4">
+                    <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Objetivo</p>
+                    <p class="mt-1 text-sm text-zinc-200">{{ training()?.input?.goal }}</p>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
 </div>
