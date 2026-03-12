@@ -12,7 +12,9 @@ Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos
 - Regeneración de entrenamientos desde el detalle.
 - Eliminación desde la lista con confirmación previa.
 
-<img src="./docs/screenshots/training-flow.gif" alt="Flujo de generación de entrenamiento" width="420" />
+<p align="center">
+  <img src="./docs/screenshots/training-flow.gif" alt="Flujo de generación de entrenamiento" width="420" />
+</p>
 
 ## Stack
 - Frontend: Angular 21, Signals, Angular Router, Tailwind CSS 4
