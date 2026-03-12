@@ -2,7 +2,7 @@
 
 Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos desde un historial, ver su detalle y gestionarlos desde una interfaz moderna.
 
-![Vista principal de TrainIA](./docs/screenshots/training-list.png)
+![Listado principal de entrenamientos en TrainIA](./docs/screenshots/training-list.png)
 
 ## Demo funcional
 - Crear un entrenamiento a partir de objetivo, frecuencia, split, nivel y equipamiento.
