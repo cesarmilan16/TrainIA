@@ -84,6 +84,13 @@
     <div class="rounded-xl border border-emerald-800 bg-emerald-950 p-3 text-sm text-emerald-400">
       <p><span class="font-semibold">ID:</span> {{ generatedId() }}</p>
       <p><span class="font-semibold">Estado:</span> {{ generatedStatus() }}</p>
+      <a
+        class="mt-3 inline-flex items-center gap-2 rounded-xl border border-emerald-700 bg-emerald-900 px-3 py-2 font-medium text-emerald-100 transition-colors hover:bg-emerald-800"
+        [routerLink]="['/trainings', generatedId()]"
+      >
+        <span>Ver detalle</span>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
     }
 

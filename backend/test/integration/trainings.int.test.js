@@ -50,6 +50,13 @@ describe("Trainings API", () => {
     it("GET /api/trainings/:id -> 200", async () => {
         const res = await request(app).get(`/api/trainings/${createdId}`);
         expect(res.status).toBe(200);
+        expect(res.body).toEqual(
+            expect.objectContaining({
+                retryCount: expect.any(Number),
+                remainingRegenerations: expect.any(Number),
+                canRegenerate: expect.any(Boolean),
+            })
+        );
     });
 
     it("GET /api/trainings/:id -> 404 si el entrenamiento no existe", async () => {

@@ -73,6 +73,9 @@ export interface TrainingDetailResponse {
     id: string;
     status: TrainingStatus;
     createdAt: string;
+    retryCount: number;
+    remainingRegenerations: number;
+    canRegenerate: boolean;
     input: TrainingInput;
     training?: GeneratedTraining;
 }

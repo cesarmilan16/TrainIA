@@ -2,11 +2,27 @@
 
 Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos desde un historial, ver su detalle y gestionarlos desde una interfaz moderna.
 
+## Capturas
+Añade aquí tus imágenes o GIFs cuando quieras dejarlo listo para portfolio.
+
+```md
+![Listado de entrenamientos](./docs/screenshots/training-list.png)
+![Detalle de entrenamiento](./docs/screenshots/training-detail.png)
+![Formulario de creación](./docs/screenshots/training-form.png)
+```
+
+Huecos recomendados:
+- `[CAPTURA_LISTADO]` historial principal con cards y paginación
+- `[CAPTURA_DETALLE]` detalle completo con días y ejercicios
+- `[CAPTURA_FORMULARIO]` formulario de creación
+- `[GIF_GENERACION]` flujo crear -> generando -> detalle completado
+
 ## Demo funcional
 - Crear un entrenamiento a partir de objetivo, frecuencia, split, nivel y equipamiento.
 - Generación asíncrona del plan con seguimiento de estado.
 - Historial paginado de entrenamientos guardados.
 - Vista de detalle por entrenamiento.
+- Regeneración de entrenamientos desde el detalle.
 - Eliminación desde la lista con confirmación previa.
 
 ## Stack
@@ -87,6 +103,7 @@ Actualmente hay cobertura básica de integración para:
 - consulta por id
 - 404 por id inexistente
 - listado paginado
+- regeneración con control de intentos desde backend
 - borrado exitoso
 - conflicto al borrar si el entrenamiento está en `GENERATING`
 
@@ -113,6 +130,8 @@ Esto crea demos en estado:
 - `FAILED`
 - `COMPLETED`
 
+La app permite hasta `10` regeneraciones por entrenamiento.
+
 Para eliminarlos:
 
 ```bash
@@ -127,9 +146,10 @@ npm run seed:clear
 - Integración de IA con salida estructurada
 - Uso de Angular Signals para estado local
 - Navegación entre vistas y detalle por recurso
+- Regeneración controlada con límite de intentos
 - Persistencia con SQLite
 
 ## Mejoras previstas
-- Regenerar entrenamiento desde la interfaz
-- Mejor tratamiento de errores y estados vacíos
-- Despliegue y documentación visual con capturas
+- Despliegue online
+- Documentación visual final con capturas o GIF
+- Filtros y búsqueda en el listado

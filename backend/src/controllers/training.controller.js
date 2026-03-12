@@ -4,6 +4,8 @@ import { generateTraining } from "../services/ai.service.js";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database.js";
 
+const MAX_REGENERATIONS = 10;
+
 export const generateTrainingController = async (req, res) => {
 
     const result = trainingSchema.safeParse(req.body);
@@ -138,12 +140,18 @@ export const getTrainingByIdController = (req, res) => {
         }
     }
 
+    const canRegenerate = currentStatus !== "GENERATING" && result.retry_count < MAX_REGENERATIONS;
+    const remainingRegenerations = Math.max(0, MAX_REGENERATIONS - result.retry_count);
+
     // si no está completado no devolvemos el entrenamiento
     if (currentStatus !== "COMPLETED") {
         return res.status(200).json({
             id,
             status: currentStatus,
             createdAt: created_at,
+            retryCount: result.retry_count,
+            remainingRegenerations,
+            canRegenerate,
             input: {
                 goal,
                 daysPerWeek: days_per_week,
@@ -174,6 +182,9 @@ export const getTrainingByIdController = (req, res) => {
         id,
         status: currentStatus,
         createdAt: created_at,
+        retryCount: result.retry_count,
+        remainingRegenerations,
+        canRegenerate,
         input: {
             goal,
             daysPerWeek: days_per_week,
@@ -254,7 +265,7 @@ export const regenerateTrainingController = (req, res) => {
         });
     };
 
-    if (result.retry_count >= 2) {
+    if (result.retry_count >= MAX_REGENERATIONS) {
         return res.status(409).json({
             error: "Has consumido todos los intentos"
         });
@@ -272,11 +283,12 @@ export const regenerateTrainingController = (req, res) => {
 
     db.prepare(`
         UPDATE trainings
-        SET status = ?, training_json = ?, retry_count = retry_count + 1
+        SET status = ?, training_json = ?, created_at = ?, retry_count = retry_count + 1
         WHERE id = ?
         `).run(
         "GENERATING",
         null,
+        new Date().toISOString(),
         idParams
     );
 

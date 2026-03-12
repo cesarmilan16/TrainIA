@@ -38,6 +38,9 @@ describe('TrainingDetail', () => {
       id: 'training-001',
       status: 'COMPLETED',
       createdAt: '2026-03-12T10:00:00.000Z',
+      retryCount: 0,
+      remainingRegenerations: 10,
+      canRegenerate: true,
       input: {
         goal: 'Ganar masa muscular',
         daysPerWeek: 4,

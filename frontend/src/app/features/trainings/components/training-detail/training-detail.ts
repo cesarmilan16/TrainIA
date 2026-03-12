@@ -8,6 +8,7 @@ import {
   TrainingSplit,
   TrainingStatus,
 } from '../../../../core/trainings/training-api.models';
+import { switchMap, takeWhile, timer } from 'rxjs';
 
 @Component({
   selector: 'app-training-detail',
@@ -21,6 +22,7 @@ export class TrainingDetail {
 
   readonly training = signal<TrainingDetailResponse | null>(null);
   readonly isLoading = signal(true);
+  readonly isRegenerating = signal(false);
   readonly error = signal('');
 
   constructor() {
@@ -35,16 +37,85 @@ export class TrainingDetail {
   }
 
   loadTrainingById(id: string): void {
+    this.error.set('');
+
     this.trainingApi.getTrainingById(id).subscribe({
       next: (res) => {
         this.training.set(res);
         this.isLoading.set(false);
+
+        if (res.status === 'GENERATING') {
+          this.startPolling(id);
+        }
       },
       error: () => {
         this.error.set('No se pudo cargar el entrenamiento');
         this.isLoading.set(false);
       }
     });
+  }
+
+  private startPolling(id: string): void {
+    // Dejamos visible el estado "GENERATING" antes de consultar el primer refresh.
+    timer(2500, 2500)
+      .pipe(
+        switchMap(() => this.trainingApi.getTrainingById(id)),
+        takeWhile((detail) => detail.status === 'GENERATING', true)
+      )
+      .subscribe({
+        next: (detail) => {
+          this.training.set(detail);
+
+          if (detail.status !== 'GENERATING') {
+            this.isRegenerating.set(false);
+          }
+        },
+        error: () => {
+          this.error.set('No se pudo consultar el estado del entrenamiento');
+          this.isRegenerating.set(false);
+        }
+      });
+  }
+
+  regenerateTraining(): void {
+    const id = this.training()?.id;
+
+    if (!id || this.isRegenerating()) {
+      return;
+    }
+
+    this.error.set('');
+    this.isRegenerating.set(true);
+
+    this.trainingApi.regenerateTraining(id).subscribe({
+      next: (res) => {
+        this.training.update((current) => current
+          ? {
+            ...current,
+            status: res.status,
+            canRegenerate: false,
+            remainingRegenerations: Math.max(0, current.remainingRegenerations - 1),
+            training: undefined,
+          }
+          : current);
+        this.startPolling(res.id);
+      },
+      error: (err) => {
+        const backendMessage = err?.error?.error;
+        this.error.set(backendMessage ?? 'No se pudo regenerar el entrenamiento');
+        this.isRegenerating.set(false);
+      }
+    });
+  }
+
+  canRegenerate(): boolean {
+    const detail = this.training();
+
+    if (!detail) {
+      return false;
+    }
+
+    return detail.canRegenerate && !this.isRegenerating();
   }
 
   getTrainingSplitLabel(split: TrainingSplit): string {
