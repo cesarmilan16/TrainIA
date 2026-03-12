@@ -2,6 +2,9 @@
 
 Aplicación full-stack para generar planes de entrenamiento con IA, consultarlos desde un historial, ver su detalle y gestionarlos desde una interfaz moderna.
 
+## Demo desplegada
+https://trainingia.cesarmilandev.com
+
 ![Listado principal de entrenamientos en TrainIA](./docs/screenshots/training-list.png)
 
 ## Demo funcional
