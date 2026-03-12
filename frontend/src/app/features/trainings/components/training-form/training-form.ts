@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TrainingSplit, ExperienceLevel, Equipment, GeneratedTraining } from '../../../../core/trainings/training-api.models';
 import { TrainingApiService } from '../../../../core/trainings/training-api.service';
-import { finalize, switchMap, takeWhile, timer } from 'rxjs';
+import { switchMap, takeWhile, timer } from 'rxjs';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -62,16 +62,19 @@ export class TrainingForm {
 
           if (detail.status === 'COMPLETED' && detail.training) {
             this.generatedTraining.set(detail.training);
+            this.isSubmitting.set(false);
           }
 
           if (detail.status === 'FAILED') {
             this.apiError.set('La generación falló');
+            this.isSubmitting.set(false);
           }
         },
         error: (err) => {
           const msg = err?.error?.error ?? 'Error consultando el estado';
           this.generatedStatus.set('FAILED');
           this.apiError.set(msg);
+          this.isSubmitting.set(false);
         }
       });
   }
@@ -93,7 +96,6 @@ export class TrainingForm {
 
     this.trainingApi
       .generateTraining(payload)
-      .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
         next: (res) => {
           this.generatedId.set(res.id);
@@ -103,6 +105,7 @@ export class TrainingForm {
         error: (err) => {
           const backendMessage = err?.error?.errors?.[0]?.message || err?.error?.error;
           this.apiError.set(backendMessage ?? 'Error al generar entrenamiento');
+          this.isSubmitting.set(false);
         },
       });
   }
