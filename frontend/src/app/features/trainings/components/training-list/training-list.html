@@ -62,7 +62,7 @@
         @if (!isLoading() && !error() && trainings().length > 0) {
         <div class="grid gap-4 md:grid-cols-2">
             @for (training of trainings(); track training.id) {
-
+            <a [routerLink]="['/trainings', training.id]">  
             <article
                 class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30 sm:p-5">
 
@@ -118,6 +118,7 @@
                     <p class="max-w-full truncate text-xs text-zinc-600 font-mono sm:max-w-40">{{ training.id }}</p>
                 </div>
             </article>
+            </a>  
             }
         </div>
         }
