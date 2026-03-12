@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 
-const db = new Database("trainia.db");
+const dbPath = process.env.DB_PATH || "trainia.db";
+const db = new Database(dbPath);
 
 export default db;

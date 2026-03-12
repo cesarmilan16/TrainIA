@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: trainia-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: 3000
+      DB_PATH: /app/data/trainia.db
+    volumes:
+      - trainia_data:/app/data
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: trainia-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4304:80"
+    restart: unless-stopped
+
+volumes:
+  trainia_data:

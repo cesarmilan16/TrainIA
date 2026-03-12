@@ -83,6 +83,27 @@ La app quedará disponible en:
 - Frontend: `http://localhost:4200`
 - Backend: `http://localhost:3000`
 
+## Docker Compose
+La aplicación también puede levantarse con Docker Compose.
+
+Puertos usados en esta configuración:
+- Frontend: `http://localhost:4304`
+- Backend: `http://localhost:3001`
+
+Antes de levantar los contenedores, asegúrate de tener `backend/.env` con al menos:
+
+```env
+OPENAI_API_KEY=tu_api_key
+```
+
+Luego ejecuta:
+
+```bash
+docker compose up --build
+```
+
+La base de datos SQLite se persiste en un volumen Docker llamado `trainia_data`.
+
 ## Tests
 ### Backend
 ```bash
