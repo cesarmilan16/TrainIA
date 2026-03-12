@@ -4,7 +4,7 @@ import { HealthCheck } from './features/trainings/components/health-check/health
 import { TrainingList } from './features/trainings/components/training-list/training-list';
 
 export const routes: Routes = [
-  { path: '', component: TrainingForm },
+  { path: 'form', component: TrainingForm },
   { path: 'trainings', component: TrainingList},
   { path: 'health', component: HealthCheck }
 ];

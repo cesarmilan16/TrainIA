@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TrainingApiService } from '../../../../core/trainings/training-api.service';
-import { ExperienceLevel, TrainingListItem, TrainingSplit, Equipment, TrainingStatus } from '../../../../core/trainings/training-api.models';
+import { ExperienceLevel, TrainingListItem, TrainingSplit, Equipment, TrainingStatus, Pagination } from '../../../../core/trainings/training-api.models';
 
 @Component({
   selector: 'app-training-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './training-list.html',
   styles: ``,
 })
@@ -12,6 +13,11 @@ export class TrainingList {
   private readonly trainingApi = inject(TrainingApiService);
 
   readonly trainings = signal<TrainingListItem[]>([]);
+  // Mantiene el contexto de navegación para la paginación.
+  readonly pagination = signal<Pagination | null>(null);
+  readonly currentPage = signal(1);
+  // Guarda temporalmente el id pendiente de confirmación en el modal.
+  readonly trainingToDelete = signal<string | null>(null);
   readonly isLoading = signal(true);
   readonly error = signal('');
 
@@ -19,13 +25,15 @@ export class TrainingList {
     this.loadTrainings();
   }
 
-  loadTrainings(): void {
+  loadTrainings(page: number = this.currentPage(), limit: number = 6): void {
     this.isLoading.set(true);
     this.error.set('');
 
-    this.trainingApi.getTrainings().subscribe({
+    this.trainingApi.getTrainings(page, limit).subscribe({
       next: (res) => {
         this.trainings.set(res.data);
+        this.pagination.set(res.pagination);
+        this.currentPage.set(res.pagination.page);
         this.isLoading.set(false);
       },
       error: () => {
@@ -33,6 +41,37 @@ export class TrainingList {
         this.isLoading.set(false);
       }
     });
+  }
+
+  deleteTraining(id: string): void {
+    this.trainingApi.deleteTraining(id).subscribe({
+      next: () => {
+        this.closeDeleteModal();
+        this.loadTrainings();
+      },
+      error: () => {
+        this.error.set('No se pudo borrar el entrenamiento');
+      }
+    });
+  }
+
+  openDeleteModal(id: string): void {
+    this.trainingToDelete.set(id);
+  }
+
+  closeDeleteModal(): void {
+    this.trainingToDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.trainingToDelete();
+
+    if (!id) {
+      return;
+    }
+
+    // El modal decide qué id borrar; el borrado real sigue centralizado aquí.
+    this.deleteTraining(id);
   }
 
   getTrainingSplitLabel(split: TrainingSplit): string {

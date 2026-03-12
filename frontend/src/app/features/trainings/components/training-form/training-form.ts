@@ -49,6 +49,7 @@ export class TrainingForm {
   });
 
   private startPolling(id: string): void {
+    // Consulta periódicamente el backend hasta que la generación termine.
     timer(0, 2500)
       .pipe(
         switchMap(() => this.trainingApi.getTrainingById(id)),
@@ -86,6 +87,7 @@ export class TrainingForm {
     this.generatedTraining.set(null);
     this.isSubmitting.set(true);
 
+    // Enviamos exactamente el shape que espera el endpoint de generación.
     const payload = this.form.getRawValue();
 
     this.trainingApi

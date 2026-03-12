@@ -1,111 +1,165 @@
 <div class="min-h-screen bg-zinc-950 py-10">
-  <div class="mx-auto max-w-5xl px-4">
+    <div class="mx-auto max-w-5xl px-4">
 
-    <!-- Header -->
-    <div class="mb-6 rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">TrainIA</p>
-          <h1 class="mt-2 text-3xl font-semibold text-zinc-100">Tus entrenamientos</h1>
-          <p class="mt-2 max-w-2xl text-sm text-zinc-400">
-            Revisa los planes que has generado y consulta rápidamente su estado, split, nivel y fecha de creación.
-          </p>
+        <!-- Header -->
+        <div class="mb-6 rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-sm">
+            <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">TrainIA</p>
+                    <h1 class="mt-2 text-3xl font-semibold text-zinc-100">Tus entrenamientos</h1>
+                    <p class="mt-2 max-w-2xl text-sm text-zinc-400">
+                        Revisa los planes que has generado y consulta rápidamente su estado, split, nivel y fecha de
+                        creación.
+                    </p>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <div class="rounded-2xl border border-zinc-700 bg-zinc-800 px-5 py-3 text-center">
+                        <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Total</p>
+                        <p class="mt-1 text-3xl font-bold text-zinc-100">{{ pagination()?.total }}</p>
+                    </div>
+                    <a routerLink="/form"
+                        class="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-300 px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white">
+                        + Nuevo entrenamiento
+                    </a>
+                </div>
+
+            </div>
         </div>
 
-        <div class="rounded-2xl border border-zinc-700 bg-zinc-800 px-5 py-3 text-center">
-          <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Total</p>
-          <p class="mt-1 text-3xl font-bold text-zinc-100">{{ trainings().length }}</p>
+        <!-- Loading -->
+        @if (isLoading()) {
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 shadow-sm">
+            <div class="flex flex-col items-center justify-center gap-4 text-center">
+                <div class="h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-zinc-100"></div>
+                <div>
+                    <p class="font-medium text-zinc-100">Cargando entrenamientos</p>
+                    <p class="text-sm text-zinc-500">Estamos consultando tu historial.</p>
+                </div>
+            </div>
         </div>
-      </div>
+        }
+
+        <!-- Error -->
+        @if (error()) {
+        <div class="rounded-2xl border border-rose-800 bg-rose-950 p-4 text-sm text-rose-400 shadow-sm">
+            {{ error() }}
+        </div>
+        }
+
+        <!-- Empty state -->
+        @if (!isLoading() && !error() && trainings().length === 0) {
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 text-center shadow-sm">
+            <p class="text-4xl">🏋️</p>
+            <p class="mt-4 text-lg font-semibold text-zinc-100">Todavía no tienes entrenamientos</p>
+            <p class="mt-2 text-sm text-zinc-500">
+                Cuando generes tu primer plan, aparecerá aquí con todos sus datos.
+            </p>
+        </div>
+        }
+
+        <!-- Grid -->
+        @if (!isLoading() && !error() && trainings().length > 0) {
+        <div class="grid gap-4 md:grid-cols-2">
+            @for (training of trainings(); track training.id) {
+
+            <article
+                class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30">
+
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Entrenamiento</p>
+                        <h2 class="mt-1 truncate text-lg font-semibold text-zinc-100">{{ training.goal }}</h2>
+                    </div>
+                    <button
+                        class="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm font-medium text-rose-400 hover:border-rose-800 hover:bg-rose-950 transition-colors cursor-pointer"
+                        (click)="openDeleteModal(training.id)">Eliminar
+                    </button>
+
+                    <span class="shrink-0 inline-flex rounded-full border px-3 py-1 text-xs font-semibold"
+                        [class]="getStatusClasses(training.status)">
+                        {{ getStatusLabel(training.status) }}
+                    </span>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 gap-2">
+                    <div class="rounded-xl bg-zinc-800 p-3">
+                        <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Split</p>
+                        <p class="mt-1 text-sm font-medium text-zinc-200">{{
+                            getTrainingSplitLabel(training.trainingSplit) }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-zinc-800 p-3">
+                        <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Nivel</p>
+                        <p class="mt-1 text-sm font-medium text-zinc-200">{{
+                            getExperienceLevelLabel(training.experienceLevel) }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-zinc-800 p-3">
+                        <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Frecuencia</p>
+                        <p class="mt-1 text-sm font-medium text-zinc-200">{{ training.daysPerWeek }} días/sem.</p>
+                    </div>
+
+                    <div class="rounded-xl bg-zinc-800 p-3">
+                        <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Equipamiento</p>
+                        <p class="mt-1 text-sm font-medium text-zinc-200">{{ getEquipmentLabel(training.equipment) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between border-t border-zinc-800 pt-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Creado</p>
+                        <p class="mt-1 text-sm text-zinc-300">{{ formatDate(training.createdAt) }}</p>
+                    </div>
+                    <p class="max-w-40 truncate text-xs text-zinc-600 font-mono">{{ training.id }}</p>
+                </div>
+            </article>
+            }
+        </div>
+        }
+        <div class="mt-6 flex items-center justify-center gap-3">
+            <button [disabled]="currentPage() === 1" (click)="loadTrainings(currentPage() - 1)"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700 cursor-pointer disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-900 disabled:text-zinc-600 disabled:hover:border-zinc-800 disabled:hover:bg-zinc-900">
+                &lt;
+            </button>
+            <p
+                class="inline-flex min-w-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-100">
+                {{ currentPage() }}
+            </p>
+            <button [disabled]="currentPage() === pagination()?.totalPages" (click)="loadTrainings(currentPage() + 1)"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700 cursor-pointer disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-900 disabled:text-zinc-600 disabled:hover:border-zinc-800 disabled:hover:bg-zinc-900">
+                &gt;
+            </button>
+        </div>
     </div>
-
-    <!-- Loading -->
-    @if (isLoading()) {
-    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 shadow-sm">
-      <div class="flex flex-col items-center justify-center gap-4 text-center">
-        <div class="h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-zinc-100"></div>
-        <div>
-          <p class="font-medium text-zinc-100">Cargando entrenamientos</p>
-          <p class="text-sm text-zinc-500">Estamos consultando tu historial.</p>
-        </div>
-      </div>
-    </div>
-    }
-
-    <!-- Error -->
-    @if (error()) {
-    <div class="rounded-2xl border border-rose-800 bg-rose-950 p-4 text-sm text-rose-400 shadow-sm">
-      {{ error() }}
-    </div>
-    }
-
-    <!-- Empty state -->
-    @if (!isLoading() && !error() && trainings().length === 0) {
-    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 text-center shadow-sm">
-      <p class="text-4xl">🏋️</p>
-      <p class="mt-4 text-lg font-semibold text-zinc-100">Todavía no tienes entrenamientos</p>
-      <p class="mt-2 text-sm text-zinc-500">
-        Cuando generes tu primer plan, aparecerá aquí con todos sus datos.
-      </p>
-    </div>
-    }
-
-    <!-- Grid -->
-    @if (!isLoading() && !error() && trainings().length > 0) {
-    <div class="grid gap-4 md:grid-cols-2">
-      @for (training of trainings(); track training.id) {
-      <article class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30">
-
-        <!-- Top row -->
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Entrenamiento</p>
-            <h2 class="mt-1 truncate text-lg font-semibold text-zinc-100">{{ training.goal }}</h2>
-          </div>
-
-          <span
-            class="shrink-0 inline-flex rounded-full border px-3 py-1 text-xs font-semibold"
-            [class]="getStatusClasses(training.status)"
-          >
-            {{ getStatusLabel(training.status) }}
-          </span>
-        </div>
-
-        <!-- Stats grid -->
-        <div class="mt-4 grid grid-cols-2 gap-2">
-          <div class="rounded-xl bg-zinc-800 p-3">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Split</p>
-            <p class="mt-1 text-sm font-medium text-zinc-200">{{ getTrainingSplitLabel(training.trainingSplit) }}</p>
-          </div>
-
-          <div class="rounded-xl bg-zinc-800 p-3">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Nivel</p>
-            <p class="mt-1 text-sm font-medium text-zinc-200">{{ getExperienceLevelLabel(training.experienceLevel) }}</p>
-          </div>
-
-          <div class="rounded-xl bg-zinc-800 p-3">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Frecuencia</p>
-            <p class="mt-1 text-sm font-medium text-zinc-200">{{ training.daysPerWeek }} días/sem.</p>
-          </div>
-
-          <div class="rounded-xl bg-zinc-800 p-3">
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Equipamiento</p>
-            <p class="mt-1 text-sm font-medium text-zinc-200">{{ getEquipmentLabel(training.equipment) }}</p>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-4 flex items-center justify-between border-t border-zinc-800 pt-4">
-          <div>
-            <p class="text-xs uppercase tracking-[0.15em] text-zinc-500">Creado</p>
-            <p class="mt-1 text-sm text-zinc-300">{{ formatDate(training.createdAt) }}</p>
-          </div>
-          <p class="max-w-40 truncate text-xs text-zinc-600 font-mono">{{ training.id }}</p>
-        </div>
-      </article>
-      }
-    </div>
-    }
-
-  </div>
 </div>
+
+@if (trainingToDelete()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+    <div class="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl shadow-black/40">
+        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">Confirmación</p>
+        <h2 class="mt-2 text-xl font-semibold text-zinc-100">Eliminar entrenamiento</h2>
+        <p class="mt-3 text-sm leading-6 text-zinc-400">
+            Esta acción no se puede deshacer. El entrenamiento seleccionado se eliminará definitivamente.
+        </p>
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+            <button
+                type="button"
+                (click)="closeDeleteModal()"
+                class="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700 cursor-pointer"
+            >
+                Cancelar
+            </button>
+            <button
+                type="button"
+                (click)="confirmDelete()"
+                class="inline-flex items-center justify-center rounded-2xl border border-rose-800 bg-rose-950 px-4 py-2.5 text-sm font-medium text-rose-300 transition-colors hover:bg-rose-900 cursor-pointer"
+            >
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
+}
