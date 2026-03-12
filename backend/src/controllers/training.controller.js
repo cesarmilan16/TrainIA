@@ -347,12 +347,6 @@ export const deleteTrainingController = (req, res) => {
         });
     };
 
-    if (result.status === "GENERATING") {
-        return res.status(409).json({
-            error: "El entrenamiento se está generando"
-        });
-    };
-
     db.prepare(`
         DELETE FROM trainings
         WHERE id = ?

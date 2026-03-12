@@ -79,8 +79,6 @@ npm install
 npm start
 ```
 
-![Aplicación ejecutándose en local](./docs/screenshots/trainia-local.png)
-
 La app quedará disponible en:
 - Frontend: `http://localhost:4200`
 - Backend: `http://localhost:3000`
@@ -100,7 +98,7 @@ Actualmente hay cobertura básica de integración para:
 - listado paginado
 - regeneración con control de intentos desde backend
 - borrado exitoso
-- conflicto al borrar si el entrenamiento está en `GENERATING`
+- borrado permitido también en `GENERATING`
 
 ### Frontend
 ```bash

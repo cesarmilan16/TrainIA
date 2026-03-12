@@ -155,7 +155,7 @@ describe("Trainings API", () => {
         expect(deletedRow).toBeUndefined();
     });
 
-    it("DELETE /api/trainings/:id -> 409 si el entrenamiento esta generandose", async () => {
+    it("DELETE /api/trainings/:id -> 204 aunque el entrenamiento este generandose", async () => {
         const idGenerating = "test-delete-generating-001";
 
         db.prepare(`
@@ -186,9 +186,9 @@ describe("Trainings API", () => {
 
         const res = await request(app).delete(`/api/trainings/${idGenerating}`);
 
-        expect(res.status).toBe(409);
-        expect(res.body).toEqual({
-            error: "El entrenamiento se está generando"
-        });
+        expect(res.status).toBe(204);
+
+        const deletedRow = db.prepare("SELECT id FROM trainings WHERE id = ?").get(idGenerating);
+        expect(deletedRow).toBeUndefined();
     });
 });

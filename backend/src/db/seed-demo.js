@@ -1,6 +1,10 @@
 import db from "./database.js";
 
-const now = new Date().toISOString();
+const now = new Date();
+
+function minutesAgo(minutes) {
+  return new Date(now.getTime() - minutes * 60 * 1000).toISOString();
+}
 
 const demoTrainings = [
   {
@@ -12,7 +16,7 @@ const demoTrainings = [
     equipment: "gym",
     status: "GENERATING",
     trainingJson: null,
-    createdAt: now,
+    createdAt: minutesAgo(0),
     retryCount: 0,
   },
   {
@@ -24,7 +28,7 @@ const demoTrainings = [
     equipment: "home_dumbbells",
     status: "FAILED",
     trainingJson: null,
-    createdAt: "2026-03-12T10:15:00.000Z",
+    createdAt: minutesAgo(1),
     retryCount: 1,
   },
   {
@@ -77,7 +81,7 @@ const demoTrainings = [
         },
       ],
     }),
-    createdAt: "2026-03-12T10:30:00.000Z",
+    createdAt: minutesAgo(2),
     retryCount: 0,
   },
 ];
