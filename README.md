@@ -169,5 +169,5 @@ npm run seed:clear
 - Persistencia con SQLite
 
 ## Mejoras previstas
-- Despliegue online
 - Filtros y búsqueda en el listado
+- Añadir mas campos a los entrenamientos generados
