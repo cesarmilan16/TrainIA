@@ -39,7 +39,7 @@
             class="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
             id="trainingSplit" formControlName="trainingSplit">
             @for (split of trainingSplits; track split) {
-            <option class="bg-zinc-800" [value]="split">{{ split }}</option>
+            <option class="bg-zinc-800" [value]="split">{{ getTrainingSplitLabel(split) }}</option>
             }
           </select>
         </div>
@@ -50,7 +50,7 @@
             class="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
             id="experienceLevel" formControlName="experienceLevel">
             @for (level of experienceLevels; track level) {
-            <option class="bg-zinc-800" [value]="level">{{ level }}</option>
+            <option class="bg-zinc-800" [value]="level">{{ getExperienceLevelLabel(level) }}</option>
             }
           </select>
         </div>
@@ -61,7 +61,7 @@
             class="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-700"
             id="equipment" formControlName="equipment">
             @for (item of equipments; track item) {
-            <option class="bg-zinc-800" [value]="item">{{ item }}</option>
+            <option class="bg-zinc-800" [value]="item">{{ getEquipmentLabel(item) }}</option>
             }
           </select>
         </div>

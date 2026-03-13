@@ -110,15 +110,35 @@ export class TrainingForm {
       });
   }
 
-  getTrainingSplitLabel(split: TrainingSplit): string {
-    return this.trainingSplitLabels[split];
-  }
-
   getExperienceLevelLabel(level: ExperienceLevel): string {
-    return this.experienceLevelLabels[level];
+    const labels: Record<ExperienceLevel, string> = {
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado',
+    };
+
+    return labels[level];
   }
 
   getEquipmentLabel(equipment: Equipment): string {
-    return this.equipmentLabels[equipment];
+    const labels: Record<Equipment, string> = {
+      gym: 'Gimnasio completo',
+      home_dumbbells: 'Mancuernas en casa',
+      calisthenics: 'Calistenia',
+    };
+
+    return labels[equipment];
   }
+
+  getTrainingSplitLabel(split: TrainingSplit): string {
+    const labels: Record<TrainingSplit, string> = {
+      fullbody: 'Full body',
+      upper_lower: 'Torso / pierna',
+      push_pull_legs: 'Push / pull / legs',
+      weider: 'Weider',
+    };
+
+    return labels[split];
+  }
+
 }
